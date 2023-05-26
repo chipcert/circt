@@ -2662,8 +2662,16 @@ SubExprInfo ExprEmitter::visitTypeOp(ArrayGetOp op) {
   ps << "[";
   if (isZeroBitType(op.getIndex().getType()))
     emitZeroWidthIndexingValue(ps);
-  else
+  else {
+    auto idx = op.getIndex();
+    if (isa<ConstantOp>(idx.getDefiningOp())){
+      SmallString<32> valueStr;
+      auto value = idx.getDefiningOp<ConstantOp>().getValue();
+      value.toStringUnsigned(valueStr, 10);
+      ps << valueStr;
+    } else
     emitSubExpr(op.getIndex(), LowestPrecedence);
+  }
   ps << "]";
   emitSVAttributes(op);
   return {Selection, IsUnsigned};
