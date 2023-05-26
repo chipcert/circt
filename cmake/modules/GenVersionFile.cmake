@@ -10,10 +10,10 @@ set(GIT_DESCRIBE_DEFAULT "unknown git version")
 if (DRY_RUN)
   set(GIT_DESCRIBE_OUTPUT "${GIT_DESCRIBE_DEFAULT}")
 else ()
-  message(STATUS "Generating ${OUT_FILE} from ${IN_FILE} by `git describe --dirty --tags --match ${RELEASE_PATTERN}`")
+    message(STATUS "Generating ${OUT_FILE} from ${IN_FILE} by `git describe --dirty --tags") # --match ${RELEASE_PATTERN}`")
   find_package(Git QUIET)
   if (Git_FOUND)
-    execute_process(COMMAND ${GIT_EXECUTABLE} describe --dirty --tags --match ${RELEASE_PATTERN}
+    execute_process(COMMAND ${GIT_EXECUTABLE} describe --dirty --tags # --match ${RELEASE_PATTERN}
       WORKING_DIRECTORY "${SOURCE_ROOT}"
       RESULT_VARIABLE GIT_OUTPUT_RESULT
       OUTPUT_VARIABLE GIT_DESCRIBE_OUTPUT
