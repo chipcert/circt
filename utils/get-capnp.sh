@@ -24,7 +24,7 @@ esac
 
 mkdir -p "$(dirname "$BASH_SOURCE[0]")/../ext"
 EXT_DIR=$(cd "$(dirname "$BASH_SOURCE[0]")/../ext" && pwd)
-CAPNP_VER=0.9.1
+CAPNP_VER=0.9.2
 echo "Installing capnproto..."
 
 echo $EXT_DIR
