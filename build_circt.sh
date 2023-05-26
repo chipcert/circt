@@ -1,6 +1,6 @@
 #!/bin/sh
 CIRCT_SRC_DIR=$PWD
-INSTALL_PREFIX=../circt-bin
+INSTALL_PREFIX=$PWD/bin
 
 export CIRCT_CMAKE_BUILD_DIR=$CIRCT_SRC_DIR/build
 export CIRCT_LLVM_DIR=$CIRCT_SRC_DIR/llvm/llvm
