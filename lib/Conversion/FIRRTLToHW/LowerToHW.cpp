@@ -2879,6 +2879,14 @@ LogicalResult FIRRTLLowering::visitDecl(WireOp op) {
   // Name attr is required on sv.wire but optional on firrtl.wire.
   StringAttr symName = getInnerSymName(op);
   auto name = op.getNameAttr();
+
+  if (AnnotationSet::hasDontTouch(op)) {
+      sv::addSVAttributes(op, sv::SVAttributeAttr::get(op.getContext(), "keep",
+                                               R"("true")",/*emitAsComment=*/false));
+      sv::addSVAttributes(op, sv::SVAttributeAttr::get(op.getContext(), "dont_touch",
+                                               R"("true")",/*emitAsComment=*/false));
+  }
+
   if (AnnotationSet::removeAnnotations(op, dontTouchAnnoClass) && !symName) {
     auto moduleName = cast<hw::HWModuleOp>(op->getParentOp()).getName();
     // Prepend the name of the module to make the symbol name unique in the
@@ -2893,6 +2901,7 @@ LogicalResult FIRRTLLowering::visitDecl(WireOp op) {
     symName = builder.getStringAttr(moduleNamespace.newName(
         Twine("__") + moduleName + Twine("__") + name.getValue()));
   }
+
   // This is not a temporary wire created by the compiler, so attach a symbol
   // name.
   auto wire = builder.create<hw::WireOp>(
@@ -2977,6 +2986,12 @@ LogicalResult FIRRTLLowering::visitDecl(RegOp op) {
   if (!clockVal)
     return failure();
 
+  if (AnnotationSet::hasDontTouch(op)) {
+      sv::addSVAttributes(op, sv::SVAttributeAttr::get(op.getContext(), "keep",
+                                               R"("true")",/*emitAsComment=*/false));
+      sv::addSVAttributes(op, sv::SVAttributeAttr::get(op.getContext(), "dont_touch",
+                                               R"("true")",/*emitAsComment=*/false));
+  }
   // Add symbol if DontTouch annotation present.
   // For now, also ensure has symbol if forceable.
   auto symName = getInnerSymName(op);
@@ -3001,6 +3016,15 @@ LogicalResult FIRRTLLowering::visitDecl(RegOp op) {
   // Move SV attributes.
   if (auto svAttrs = sv::getSVAttributes(op))
     sv::setSVAttributes(reg, svAttrs);
+
+  if (AnnotationSet::hasDontTouch(reg)) {
+    sv::addSVAttributes(reg,
+                          sv::SVAttributeAttr::get(reg.getContext(), "keep",
+                                               R"("true")", /*emitAsComment=*/false));
+    sv::addSVAttributes(reg,
+                          sv::SVAttributeAttr::get(reg.getContext(), "dont_touch",
+                                               R"("true")", /*emitAsComment=*/false));
+  }
 
   inputEdge.setValue(reg);
   circuitState.used_RANDOMIZE_REG_INIT = 1;
