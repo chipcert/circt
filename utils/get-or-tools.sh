@@ -11,7 +11,7 @@
 #
 ##===----------------------------------------------------------------------===##
 
-OR_TOOLS_VER=9.5
+OR_TOOLS_VER=9.6
 
 mkdir -p "$(dirname "$BASH_SOURCE[0]")/../ext"
 EXT_DIR=$(cd "$(dirname "$BASH_SOURCE[0]")/../ext" && pwd)
